@@ -1,0 +1,15 @@
+---
+pool: 
+  name: "Azurepipeline"
+  vmImage: ubuntu-latest
+
+trigger:
+ - main
+steps: 
+- script: docker compose -f local.yml run --rm django pytest --junitxml=/app/TEST-pytest.xml
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat:  'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    continueonError: true
